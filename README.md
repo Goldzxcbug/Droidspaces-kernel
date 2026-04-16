@@ -24,6 +24,7 @@
 ## 📦 Rootfs 文件夹
 包含各发行版的 Rootfs 镜像。
  * **便捷启动**：所有镜像均已预配置，通过内置脚本 on 即可一键开启 KDE 桌面环境。
+ * [点我跳转](https://cdn.goldzxcbug.top/移动-Droidspaces-OSS/Rootfs)
  
 ## 📖 具体使用教程
 如果您是初学者或需要详细步骤，请参考 **酷安 @Gold_bug** 的深度教程：
