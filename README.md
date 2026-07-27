@@ -1,28 +1,38 @@
 # 📱 界面使用说明
-## [>_ ] On脚本
+本网站都已最新版 Droidspaces 的稳定版为准
+- 当前版本：v6.4.5
+## [>_ ] On脚本-仅限x11
 ❤️提供四个启动脚本,每个脚本都具有打开rootfs的KDE桌面能力，使用脚本前请确保ssh可以连通,在Termux执行命令`bash on`即可
 * **on_aaudio.sh** : 以`aaudio`加载音频,并通过127.0.0.1转发
-* **on_opensl.sh** : 以`opensles`加载音频,并通过127.0.0.1转发
 * **on_aaudio_socket.sh** : 以`aaudio`加载音频,并通过本地转发
-* **on_opensl_socket.sh** : 以`opensles`加载音频,并通过本地转发
-> **💡 注意**: 默认先使用aaudio(音质更好),如果你要使用`socket`版,由于前期打包Rootfs,你需要更改/etc/zsh/zshenv把`export PULSE_SERVER=tcp:127.0.0.1:4713`注释掉
+* **termux-依赖.sh** : Droidspaces 官方依赖脚本，适用于v6.3以上,自动x11转发与音频转发
+> **💡 注意**: 默认先使用aaudio(音质更好),如果你要使用`socket`版,由于前期打包Rootfs,你需要更改/etc/zsh/zshenv把`export PULSE_SERVER=tcp:127.0.0.1:4713`改为`export PULSE_SERVER=unix:/tmp/.pulse-socket`
 
 > **💡 注意**: 一定要点开脚本,将第二行的`arch`改成你的容器名字
 
 **⚠️ 重要提示**: 如果你设备启动桌面时，遇到类似dri3报错,swap报错可以用
 ```bash
-/data/adb/ksud sepolicy patch "allow untrusted_app_27 droidspacesd { fd file dir fifo_file lnk_file sock_file unix_stream_socket unix_dgram_socket binder } { read write getattr open add_name remove_name search connectto call transfer use }"
+/data/adb/ksud sepolicy patch "allow untrusted_app_27 droidspacesd fd use"
 #以kernelsu为例
+```
+但是这样只能解决一部分问题，有些设备的Vunlkan还是残血的
+```bash
+/data/adb/ksud sepolicy patch "permissive untrusted_app_27"
+#这条命令可以解决所有问题,但是够危险,建议配合下面,查找untrusted_app_27域的app,再确认是否执行上面命令
+/system/bin/dumpsys package packages | /system/bin/awk '/^ *Package \[/ {pkg=$2} /targetSdk=(26|27|28)$/ {print "App: " pkg " -> " $1}'
 ```
 
 ## 📁 OKI 文件夹
 本文件夹内存放的均为支持 **Droidspaces** 的定制内核。
+- NTsync 代表内核支持NTsync
+- UserNS 代表内核打上CVE-2026-43499 补丁,拒绝漏洞提权
+- UFW 内核开启UFW防火墙所需配置
 > **⚠️ 重要提示**：请务必确保您的手机内核版本与本站提供的内核版本**完全一致**，以获得最佳兼容性。
 > 
  * **6.12 版本**：
-   * **已通过测试设备**：一加 15。
+   * **已通过测试设备**：一加 15、一加 Ace 6T、一加15T、一加平板3Pro。
  * **6.6 版本**
-   * **已通过测试设备**：一加平板 2 Pro、一加 13、一加 Ace 6、一加 Ace 5 Pro、一加 13T、一加 Ace 5 至尊版(使用天玑专用)。
+   * **已通过测试设备**：一加平板 2 Pro、一加 13、一加 Ace 6、一加 Ace 5 Pro、一加 13T、一加 Ace 5 至尊版(使用天玑专用)、华硕rog9pro。
  * **6.1 版本**：
    * **已通过测试设备**：一加 Ace 3 Pro、一加 12、一加 Ace 5、一加平板 Pro、真我GT 5Pro。
  * **5.15 版本**：
@@ -38,7 +48,7 @@
  * **6.6 内核**：
    * **已通过测试设备**：小米Pad8Pro、小米15
  * **6.1 内核**：
-   * **已通过测试设备**：小米14、小米Mix Flip、红魔9SPro+、 红魔9Pro
+   * **已通过测试设备**：小米14、红魔9SPro+、 红魔9Pro、小米Pad7、小米 mix Flip
  * **5.15 内核**：
    * **已通过测试设备**：小米Pad6SPro、红米K70
  * **5.10 内核**：
